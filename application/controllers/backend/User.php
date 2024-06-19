@@ -2,26 +2,31 @@
 
 class User extends MY_Controller
 {
-    public function profile()
-    {
+    public function profile($id = null)
+    { {
 
-        $notif = null;
-        $user = \Orm\User::first();
-        if ($this->input->post()) {
-            $username = $this->input->post('username');
-            $password = $this->input->post('password');
-
-            if ($username == '' || $password == '') {
-                $notif = "Username / Password tidak boleh kosong!!!";
+            $notif = null;
+            if ($id == null) {
+                $user = \Orm\User::first();
             } else {
-                $user->username = $username;
-                $user->password = $password;
-                $user->save();
-
-                $notif = "Username / Password berhasil diganti";
+                $user = \Orm\User::find($id);
             }
-        }
+            if ($this->input->post()) {
+                $username = $this->input->post('username');
+                $password = $this->input->post('password');
 
-        view('backend.User.profile', ['user' => $user, 'notif' => $notif]);
+                if ($username == '' || $password == '') {
+                    $notif = "Username / Password tidak boleh kosong!!!";
+                } else {
+                    $user->username = $username;
+                    $user->password = $password;
+                    $user->save();
+
+                    $notif = "Username / Password berhasil diganti";
+                }
+            }
+
+            view('backend.User.profile', ['user' => $user, 'notif' => $notif]);
+        }
     }
 }
